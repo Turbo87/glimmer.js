@@ -17,6 +17,7 @@ module.exports = function() {
     '@glimmer/object-reference',
     '@glimmer/reference',
     '@glimmer/runtime',
+    '@glimmer/vm',
     '@glimmer/syntax',
     '@glimmer/util',
     '@glimmer/wire-format',

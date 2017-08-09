@@ -10,8 +10,8 @@ import {
 import {
   templateFactory,
   ComponentDefinition,
-  Component
 } from '@glimmer/runtime';
+import Component from '@glimmer/component';
 import {
   UpdatableReference
 } from '@glimmer/object-reference';
@@ -24,9 +24,10 @@ import {
 import ApplicationRegistry from './application-registry';
 import DynamicScope from './dynamic-scope';
 import Environment from './environment';
+import CompilerResolver from './compiler/resolver';
 import mainTemplate from './templates/main';
 
-function NOOP() {}
+function NOOP() { }
 
 export interface ApplicationOptions {
   rootName: string;
@@ -99,11 +100,16 @@ export default class Application implements Owner {
 
   /** @hidden */
   initContainer(): void {
-    this._container = new Container(this._registry, this.resolver);
+    let registry = this._registry;
+    let container = this._container = new Container(this._registry, this.resolver);
+
+    registry.register(`-container:${this.rootName}/main/main`, container as any);
+    registry.registerOption('-container', 'instantiate', false);
+    registry.registerInjection('environment', 'container', `-container:/${this.rootName}/main/main`);
 
     // Inject `this` (the app) as the "owner" of every object instantiated
     // by its container.
-    this._container.defaultInjections = (specifier: string) => {
+    container.defaultInjections = (specifier: string) => {
       let hash = {};
       setOwner(hash, this);
       return hash;
@@ -120,21 +126,36 @@ export default class Application implements Owner {
   boot(): void {
     this.initialize();
 
+    let resolver = new CompilerResolver(this);
+
     this.env = this.lookup(`environment:/${this.rootName}/main/main`);
+    this.env.setResolver(resolver);
 
     this.render();
   }
 
   /** @hidden */
   render(): void {
-    this.env.begin();
+    let { env } = this;
 
-    let mainLayout = templateFactory(mainTemplate).create(this.env);
+    env.begin();
+
+    let mainLayout = templateFactory(mainTemplate).create(this.env.compileOptions);
     let self = new UpdatableReference({ roots: this._roots });
-    let doc = this.document as Document; // TODO FixReification
-    let parentNode = doc.body;
     let dynamicScope = new DynamicScope();
-    let templateIterator = mainLayout.render({ self, parentNode, dynamicScope });
+
+    let cursor = {
+      element: (this.document as Document).body,
+      nextSibling: null
+    };
+
+    let templateIterator = mainLayout.renderLayout({
+      cursor,
+      env,
+      self,
+      dynamicScope
+    });
+
     let result;
     do {
       result = templateIterator.next();

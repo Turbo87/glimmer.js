@@ -5,7 +5,6 @@ import {
 } from '@glimmer/reference';
 import {
   ComponentDefinition,
-  Environment as GlimmerEnvironment,
   VM,
   Arguments,
   ComponentArgs,
@@ -16,7 +15,8 @@ import {
   Option
 } from '@glimmer/util';
 import * as WireFormat from '@glimmer/wire-format';
-import { TemplateMeta } from '@glimmer/component';
+import Environment from './environment';
+import TemplateMeta from './template-meta';
 
 export function blockComponentMacro(params, hash, template, inverse, builder) {
   let definitionArgs: ComponentArgs = [params.slice(0, 1), null, null, null];
@@ -38,7 +38,7 @@ export function inlineComponentMacro(_name, params, hash, builder) {
 
 function dynamicComponentFor(vm: VM, args: Arguments, meta: TemplateMeta): DynamicComponentReference {
   let nameRef = args.positional.at(0);
-  let env = vm.env;
+  let env = vm.env as Environment;
 
   return new DynamicComponentReference(nameRef, env, meta);
 }
@@ -46,7 +46,7 @@ function dynamicComponentFor(vm: VM, args: Arguments, meta: TemplateMeta): Dynam
 class DynamicComponentReference implements PathReference<ComponentDefinition<Opaque>> {
   public tag: TagWrapper<RevisionTag>;
 
-  constructor(private nameRef: PathReference<Opaque>, private env: GlimmerEnvironment, private meta: TemplateMeta) {
+  constructor(private nameRef: PathReference<Opaque>, private env: Environment, private meta: TemplateMeta) {
     this.tag = nameRef.tag;
   }
 
@@ -56,7 +56,10 @@ class DynamicComponentReference implements PathReference<ComponentDefinition<Opa
     let nameOrDef = nameRef.value();
 
     if (typeof nameOrDef === 'string') {
-      return env.getComponentDefinition(nameOrDef, this.meta);
+      let specifier = env.resolver.lookupComponent(nameOrDef, this.meta);
+      if (specifier) {
+        return env.resolver.resolve(specifier);
+      }
     }
 
     return null;

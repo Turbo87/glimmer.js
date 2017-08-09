@@ -32,7 +32,7 @@ test('can be assigned an owner', function(assert) {
   }
   let app = new FakeApp;
 
-  let options: EnvironmentOptions = {};
+  let options: Partial<EnvironmentOptions> = {};
   setOwner(options, app);
 
   let env = Environment.create(options);
@@ -45,9 +45,9 @@ test('can render a component', function(assert) {
   }
 
   let app = buildApp()
-    .template('hello-world', `<h1>Hello {{@name}}!</h1>`)
+    .template('HelloWorld', `<h1>Hello {{@name}}!</h1>`)
     .component('main', MainComponent)
-    .template('main', '<div><hello-world @name={{salutation}} /></div>')
+    .template('main', '<div><HelloWorld @name={{salutation}} /></div>')
     .boot();
 
   let root = app.rootElement as HTMLElement;
@@ -61,8 +61,8 @@ test('can render a component with the component helper', async function(assert) 
   }
 
   let app = buildApp()
-    .template('hello-world', '<h1>Hello {{@name}}!</h1>')
-    .template('main', '<div>{{component "hello-world" name=salutation}}</div>')
+    .template('HelloWorld', '<h1>Hello {{@name}}!</h1>')
+    .template('main', '<div>{{component "HelloWorld" name=salutation}}</div>')
     .component('main', MainComponent)
     .boot();
 
@@ -89,16 +89,16 @@ test('custom elements are rendered', function(assert) {
 
 test('components without a template raise an error', function(assert) {
   class HelloWorldComponent extends Component {
-    debugName: 'hello-world';
+    debugName: 'HelloWorld';
   }
 
   let app = buildApp()
-    .template('main', '<div><hello-world /></div>')
-    .component('hello-world', HelloWorldComponent);
+    .template('main', '<div><HelloWorld /></div>')
+    .component('HelloWorld', HelloWorldComponent);
 
   assert.raises(() => {
     app.boot();
-  }, /The component 'hello-world' is missing a template. All components must have a template. Make sure there is a template.hbs in the component directory./);
+  }, /The component 'HelloWorld' is missing a template. All components must have a template. Make sure there is a template.hbs in the component directory./);
 });
 
 test('can render a custom helper', async function(assert) {
