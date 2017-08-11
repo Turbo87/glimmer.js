@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    // Compilation Configuration
+    "target": "es2017",
+    "inlineSources": true,
+    "inlineSourceMap": true,
+    "declaration": true,
+    "outDir": "dist",
+    "baseUrl" : "packages",
+    "rootDir": "packages",
+
+    // Environment Configuration
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+
+    // Enhance Strictness
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    // These break @glimmer/application, fix and reenable this
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictNullChecks": false,
+    "allowUnreachableCode": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+
+    "newLine": "LF",
+    "noEmit": true,
+
+    "paths": {
+      "*": ["*/src", "*"]
+    }
+  },
+  "include": [
+    "packages/**/*.ts"
+  ]
+}

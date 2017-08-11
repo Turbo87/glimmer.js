@@ -14,15 +14,6 @@
   "main": "dist/commonjs/es5/index.js",
   "module": "dist/modules/es2017/index.js",
   "types": "dist/types/index.d.ts",
-  "scripts": {
-    "build": "ember build",
-    "preversion": "npm run test",
-    "prepublish": "npm run build",
-    "postpublish": "git push origin master --tags",
-    "test": "npm run test:prod",
-    "test:prod": "TEST_MODE=prod ember test",
-    "test:debug": "TEST_MODE=debug ember test"
-  },
   "dependencies": {
     "@glimmer/di": "^0.1.9",
     "@glimmer/env": "^0.1.7",

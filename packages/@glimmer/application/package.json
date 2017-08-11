@@ -14,16 +14,6 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "ember build",
-    "preversion": "npm test",
-    "prepublish": "npm run build",
-    "postpublish": "git push origin master --tags",
-    "test": "yarn run tslint && ember test",
-    "problems": "tsc -p tsconfig.json --noEmit",
-    "tslint": "tslint --typecheck -c tslint.json --project tsconfig.json",
-    "tslint:format": "tslint --typecheck -c tslint.json --project tsconfig.json --fix"
-  },
   "dependencies": {
     "@glimmer/compiler": "^0.26.2",
     "@glimmer/component": "^0.6.0",
