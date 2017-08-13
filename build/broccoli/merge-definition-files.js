@@ -7,7 +7,8 @@ const funnel = require('broccoli-funnel');
  */
 module.exports = function(tsTree, jsTree) {
   let definitionsTree = funnel(tsTree, {
-    include: ['packages/@glimmer/**/*.d.ts']
+    srcDir: 'packages',
+    include: ['**/*.d.ts']
   });
 
   return merge([jsTree, definitionsTree]);

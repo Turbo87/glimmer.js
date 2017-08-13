@@ -1,4 +1,4 @@
-import Application from '../../src/application';
+import Application from '../..';
 import { Simple } from '@glimmer/runtime';
 import { AppBuilder, AppBuilderOptions } from '@glimmer/application-test-helpers';
 import { ComponentManager } from '@glimmer/component';

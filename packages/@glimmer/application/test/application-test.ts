@@ -1,4 +1,4 @@
-import Application from '../src/application';
+import Application from '..';
 import { BlankResolver } from './test-helpers/resolvers';
 import { Document } from 'simple-dom';
 

@@ -1,7 +1,7 @@
 import Component, { tracked } from '@glimmer/component';
 import buildApp from './test-helpers/test-app';
 import { didRender } from '@glimmer/application-test-helpers';
-import { debugInfoForReference } from '../src/helpers/action';
+import { debugInfoForReference } from '..';
 
 const { module, test } = QUnit;
 
@@ -51,14 +51,14 @@ test('can curry arguments to actions', async function(assert) {
   helloWorldComponent.name = "cruel world";
   app.scheduleRerender();
 
-  await didRender(app);
+  didRender(app).then(() => {
+    h1 = root.querySelector('h1');
+    h1.onclick(fakeEvent);
 
-  h1 = root.querySelector('h1');
-  h1.onclick(fakeEvent);
-
-  assert.strictEqual(passedMsg1, 'hello');
-  assert.strictEqual(passedMsg2, 'cruel world');
-  assert.strictEqual(passedEvent, fakeEvent);
+    assert.strictEqual(passedMsg1, 'hello');
+    assert.strictEqual(passedMsg2, 'cruel world');
+    assert.strictEqual(passedEvent, fakeEvent);
+  });
 });
 
 test('actions can be passed and invoked with additional arguments', function(assert) {

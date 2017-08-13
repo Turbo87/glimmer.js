@@ -4,12 +4,10 @@ const path = require('path');
 const merge = require('broccoli-merge-trees');
 const funnel = require('broccoli-funnel');
 const concat = require('broccoli-concat');
-const transpileES6 = require('emberjs-build/lib/utils/transpile-es6');
 const transpileToES5 = require('./transpile-to-es5');
-const handlebarsInlinedTrees = require('./handlebars-inliner');
 const TSLint = require('broccoli-tslinter');
-const Rollup = require('broccoli-rollup');
 const babel = require('broccoli-babel-transpiler');
+const Rollup = require('broccoli-rollup');
 
 /**
  * For development, this returns a Broccoli tree with:
@@ -22,7 +20,7 @@ module.exports = function(tsTree, jsTree, packagesTree) {
   let browserTests = merge([
     transpileBrowserTestsToAMD(tsTree, jsTree),
     includeGlimmerAMD(packagesTree),
-    // includeVendorDependencies(),
+    includeVendorDependencies(),
     includeTestHarness()
   ]);
 
@@ -50,7 +48,13 @@ function transpileBrowserTestsToAMD(tsTree, jsTree) {
   let tslintTestsTree = generateTSLintTests(tsTree);
 
   testTree = merge([testTree, tslintTestsTree]);
-  testTree = transpileToES5(testTree, 'amd');
+  testTree = babel(testTree, {
+    sourceMaps: 'inline',
+    moduleIds: true,
+    plugins: [
+      'transform-es2015-modules-amd'
+    ]
+  });
 
   return concat(testTree, {
     outputFile: 'assets/tests.js'
@@ -87,7 +91,7 @@ function includeGlimmerAMD(packages) {
   });
 
   return concat(libAMD, {
-    outputFile: 'assets/glimmer-vm.js'
+    outputFile: 'assets/glimmer.js'
   });
 }
 
@@ -105,13 +109,19 @@ function includeVendorDependencies() {
     }
   });
 
-  let transpiled = transpileES6(merge([simpleHTMLTokenizer, handlebarsInlinedTrees.compiler, simpleDOM]), 'test-dependencies', {
-    avoidDefine: false
+  let transpiled = transpileToES5(merge([simpleHTMLTokenizer, simpleDOM]), 'amd');
+
+  let glimmerVM = funnel('packages', {
+    include: ['@glimmer/*/node_modules/@glimmer/*/dist/amd/es5/*.js']
   });
 
-  return concat(transpiled, {
+  let handlebars = funnel('node_modules/handlebars/dist', {
+    include: ['handlebars.amd.js']
+  });
+
+  return concat(merge([glimmerVM, transpiled, handlebars]), {
     outputFile: 'assets/vendor.js'
-  })
+  });
 }
 
 function includeTestHarness() {

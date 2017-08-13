@@ -16,7 +16,6 @@
   "types": "dist/types/index.d.ts",
   "dependencies": {
     "@glimmer/di": "^0.1.9",
-    "@glimmer/env": "^0.1.7",
     "@glimmer/reference": "^0.26.2",
     "@glimmer/runtime": "^0.26.2",
     "@glimmer/util": "^0.26.2"

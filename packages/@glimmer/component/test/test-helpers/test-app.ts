@@ -1,7 +1,7 @@
 import Application from '@glimmer/application';
 import { Simple } from '@glimmer/interfaces';
 import { AppBuilder, AppBuilderOptions } from '@glimmer/application-test-helpers';
-import ComponentManager from '../../src/component-manager';
+import { ComponentManager } from '../..';
 
 export class TestApplication extends Application {
   rootElement: Simple.Element;

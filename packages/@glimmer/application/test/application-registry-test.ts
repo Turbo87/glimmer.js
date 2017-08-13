@@ -1,4 +1,4 @@
-import ApplicationRegistry from '../src/application-registry';
+import { ApplicationRegistry } from '..';
 import { Registry } from '@glimmer/di';
 import { BlankResolver } from './test-helpers/resolvers';
 

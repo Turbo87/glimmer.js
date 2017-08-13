@@ -1,4 +1,4 @@
-import Component from '../src/component';
+import Component from '..';
 import buildApp from './test-helpers/test-app';
 import { getOwner } from '@glimmer/di';
 

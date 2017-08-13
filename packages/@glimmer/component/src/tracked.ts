@@ -1,4 +1,4 @@
-import { DEBUG } from "@glimmer/env";
+import { DEBUG } from "@glimmer/local-debug-flags";
 import { Tag, DirtyableTag, TagWrapper, combine, CONSTANT_TAG } from "@glimmer/reference";
 import { dict, Dict } from "@glimmer/util";
 

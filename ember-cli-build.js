@@ -36,17 +36,17 @@ module.exports = function(_options) {
   // merge them back into our JavaScript output.
   jsTree = mergeDefinitionFiles(tsTree, jsTree);
 
-  let templates = require('broccoli-stew').debug(funnel('packages/', {
-    include: ['**/*.hbs'],
-    exclude: ['**/node_modules/**']
-  }), 'TEMPLATES');
+  let templates = funnel(tsTree, {
+    srcDir: 'packages/',
+    include: ['**/*.hbs']
+  });
 
   let compiledTemplates = new GlimmerTemplatePrecompiler(templates, {
     rootName: '-application'
   });
   compiledTemplates.targetExtension = 'js';
 
-  jsTree = require('broccoli-stew').debug(merge([compiledTemplates, jsTree]), 'JSTREE');
+  jsTree = merge([compiledTemplates, jsTree]);
 
   // Glimmer includes a number of assertions and logging information that can be
   // stripped from production builds for better runtime performance.
@@ -73,7 +73,7 @@ module.exports = function(_options) {
   }
 
   // Third, build our module/ES combinations for each package.
-  let packagesTree = require('broccoli-stew').debug(buildPackages(jsTree, matrix), 'PACKAGES');
+  let packagesTree = buildPackages(jsTree, matrix);
 
   let output;
 
@@ -83,7 +83,7 @@ module.exports = function(_options) {
   if (PRODUCTION) {
     output = [packagesTree];
   } else {
-    let testsTree = require('broccoli-stew').debug(buildTests(tsTree, jsTree, packagesTree), 'TESTS');
+    let testsTree = buildTests(tsTree, jsTree, packagesTree);
     output = [packagesTree, testsTree];
   }
 

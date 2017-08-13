@@ -1,6 +1,6 @@
 import { getOwner, setOwner, Owner } from '@glimmer/di';
 import { DOMTreeConstruction } from '@glimmer/runtime';
-import Environment, { EnvironmentOptions } from '../src/environment';
+import { Environment, EnvironmentOptions } from '..';
 import Component from '@glimmer/component';
 import buildApp from './test-helpers/test-app';
 import { didRender } from '@glimmer/application-test-helpers';
@@ -9,7 +9,7 @@ import SimpleDOM from 'simple-dom';
 const { module, test } = QUnit;
 const serializer = new SimpleDOM.HTMLSerializer(SimpleDOM.voidMap);
 
-module('Environment');
+module('Environment')
 
 test('can be instantiated with new', function(assert) {
   let env = new Environment({

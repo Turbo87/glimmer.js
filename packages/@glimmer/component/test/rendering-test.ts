@@ -1,6 +1,6 @@
-import Component from '../src/component';
+import Component from '..';
 import buildApp from './test-helpers/test-app';
-import { DEBUG } from '@glimmer/env';
+import { DEBUG } from '@glimmer/local-debug-flags';
 
 const { module, test } = QUnit;
 
