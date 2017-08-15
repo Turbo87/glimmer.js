@@ -14,15 +14,15 @@
     "moduleResolution": "node",
 
     // Enhance Strictness
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    // These break @glimmer/application, fix and reenable this
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    // Enabling these breaks @glimmer/application, fix and reenable this
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": false,
     "noUnusedParameters": false,
     "strictNullChecks": false,
     "allowUnreachableCode": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
+    "noImplicitReturns": false,
 
     "newLine": "LF",
     "noEmit": true,

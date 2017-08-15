@@ -4,7 +4,6 @@ const path = require('path');
 const merge = require('broccoli-merge-trees');
 const funnel = require('broccoli-funnel');
 const concat = require('broccoli-concat');
-const transpileToES5 = require('./transpile-to-es5');
 const TSLint = require('broccoli-tslinter');
 const babel = require('broccoli-babel-transpiler');
 const Rollup = require('broccoli-rollup');
@@ -109,7 +108,13 @@ function includeVendorDependencies() {
     }
   });
 
-  let transpiled = transpileToES5(merge([simpleHTMLTokenizer, simpleDOM]), 'amd');
+  let transpiled = babel(merge([simpleHTMLTokenizer, simpleDOM]), {
+    sourceMaps: 'inline',
+    moduleIds: true,
+    plugins: [
+      'transform-es2015-modules-amd'
+    ]
+  });
 
   let glimmerVM = funnel('packages', {
     include: ['@glimmer/*/node_modules/@glimmer/*/dist/amd/es5/*.js']

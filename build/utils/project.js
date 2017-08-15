@@ -103,8 +103,6 @@ function topsort(packages) {
   // Get a list of package names discovered in the repo.
   let inRepoDependencies = packages.map(pkg => pkg.name);
 
-  let packagesWithCycles = [];
-
   // For each package, get a list of in-repo packages it depends on, and add
   // them to the graph.
   packages
@@ -115,7 +113,6 @@ function topsort(packages) {
       } catch (e) {
         if (e.message.match(/cycle detected/)) {
           console.log(`Warning: ${e.message}`);
-          packagesWithCycles.push(pkg);
         } else {
           throw e;
         }
@@ -126,8 +123,6 @@ function topsort(packages) {
 
   // Get a topographically sorted list of packages.
   graph.each((pkgName, pkg) => sorted.push(pkg));
-
-  sorted = [...sorted, ...packagesWithCycles];
 
   return sorted;
 
