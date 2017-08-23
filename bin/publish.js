@@ -171,10 +171,12 @@ function ensureProductionBuild() {
 }
 
 function assertGitIsClean() {
-  let status = execSync('git status').toString();
+  // Using --porcelain gives consistent output across versions and user configs.
+  // stdout is the empty string when there are no changes
+  let hasChanges = execSync('git status --porcelain').length;
   let force = process.argv.indexOf('--force') > -1;
 
-  if (!status.match(/^nothing to commit/m)) {
+  if (hasChanges) {
     if (force) {
       console.log(chalk.yellow("--force"), "- ignoring unclean git working tree");
     } else {
