@@ -17,9 +17,9 @@ if (DRY_RUN) {
   console.log(chalk.yellow("--dry-run"), "- side effects disabled");
 }
 
-// Fail fast if we haven't done a build first.
-assertDistExists();
 assertGitIsClean();
+
+ensureProductionBuild();
 
 let cli = readline.createInterface({
   input: process.stdin,
@@ -157,7 +157,9 @@ function throwNoPackagesErr() {
   process.exit(1);
 }
 
-function assertDistExists() {
+function ensureProductionBuild() {
+  execWithSideEffects(`npm run build`);
+
   try {
     let stat = fs.statSync(DIST_PATH);
     if (!stat.isDirectory()) {
