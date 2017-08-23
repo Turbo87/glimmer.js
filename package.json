@@ -3,6 +3,14 @@
    "version": "0.8.0",
    "private": true,
    "license": "MIT",
+   "scripts": {
+    "build": "ember build --env production",
+    "start": "ember serve --port=7357",
+    "test": "ember test",
+    "tslint": "tslint --project tsconfig.json",
+    "eslint": "eslint build/",
+    "problems": "tsc -p tsconfig.json --noEmit"
+  },
    "devDependencies": {
       "@types/qunit": "^2.0.31",
       "babel-plugin-debug-macros": "^0.1.11",
